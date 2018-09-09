@@ -1,2 +1,1 @@
-[short course about lingtypology in INALCO (Paris), 19.01.2018](https://goo.gl/S8zPVu)
-
+[Materials](Materials for the course at HSE / LCL Summer School on Areal Linguistics and the Languages of Russia, 10-14.09.2018 with @macleginn ) for the course at [HSE / LCL Summer School](https://ling.hse.ru/indling) on Areal Linguistics and the Languages of Russia, 10-14.09.2018 with @macleginn 
