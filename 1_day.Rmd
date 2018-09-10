@@ -1,46 +1,58 @@
 ---
-title: "2. Glottolog functions"
-author: "[G. Moroz](mailto:agricolamz@gmail.com) <br> Presentation link: goo.gl/PS2UD4"
+title: "Introduction to `lingtypology`"
+author: "[G. Moroz](mailto:agricolamz@gmail.com) <br> Presentation link: [tinyurl.com/y9lbrzf6](https://tinyurl.com/y9lbrzf6)"
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(message = FALSE, comment=NA)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, comment=NA, fig.width=8, fig.height=3.4)
+library(lingtypology)
 ```
 
-<style>
-.parallax {
-    /* The image used */
-    background-image: url("glottolog.png");
+## 1. What is `lingtypology`?
 
-    /* Set a specific height */
-    min-height: 350px; 
+* simple tool for creating interactive and static maps in R
+* you can use the result on your website and in your projects
+* API to some linguistic databases (Glottolog, WALS, PHOIBLe, AUTOTYP and others)
 
-    /* Create the parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: auto;
-}
-    #wrap { width: 700px; height: 550px; padding: 0; overflow: hidden; }
-    #frame { width: 900px; height: 700px; border: 1px solid LightGray; }
-    #frame {  zoom: 0.75;
-              -moz-transform: scale(0.7); 
-              -moz-transform-origin: 0 0; }
-</style>
+## 2. Package instalation
 
-<div class="parallax"></div>
+Get the stable version from CRAN:
 
-## 1. About [Glottolog](http://glottolog.org/)
+```{r, eval = FALSE}
+install.packages("lingtypology")
+```
 
-> _Glottolog provides a comprehensive catalogue of the world's languages, language families and dialects. It assigns a unique and stable identifier (the Glottocode) to (in principle) all languoids, i.e. all families, languages, and dialects._
+… or get the development version from GitHub:
+
+```{r, eval = FALSE}
+# install.packages("devtools") # 
+devtools::install_github("ropensci/lingtypology")
+```
+
+If you've got some problems with dependencies, try to install one of the older vertions:
+
+```{r, eval = FALSE}
+devtools::install_version("lingtypology", version = "1.0.12")
+```
+
+Misha Voronov claim that for correct instalation on Debian some additional packages should be installed:
+
+```
+apt-get install libcurl4-openssl-dev
+apt-get install libssl-dev
+```
+
+Load a library:
+
+```{r}
+library(lingtypology)
+```
 
 ## 2. Glottolog functions
 
-Don't forget to load a library:
-```{r}
-library("lingtypology")
-```
-
+This package is based on the [Glottolog database](http://glottolog.org/) (v. 2.7), so lingtypology has several functions for accessing data from that database.
 
 ### 2.1 Command name's syntax
 Most of the functions in `lingtypology` have the same syntax: **what you need.what you have**. Most of them are based on _language name_.
@@ -121,31 +133,38 @@ Unfortunately, the [Glottolog database (v. 2.7)](http://glottolog.org/) is not p
 
 ```{r}
 is.glottolog(c("Abkhaz", "Abkhazian"), glottolog.source = "original")
-```
-```{r}
 is.glottolog(c("Abkhaz", "Abkhazian"), glottolog.source = "modified")
 ```
 
-<div class="parallax"></div>
-
-## 3. Tasks
-### 3.1 Celtic languages
+### Task 2.5: Celtic languages
 How many Celtic languages in the database?
+
+```{r, include=FALSE}
+lang.aff("Celtic")
+```
+
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
 <input type="text" name="answerOne">
 <input type="submit" value="check">
 </form>
 
-### 3.2 Austronesian languages
+### Task 2.6: Austronesian languages
 How many Austronesian languages in the database?
+```{r, include=FALSE}
+length(lang.aff("Austronesian"))
+```
+
 <form name="FormTwo" onsubmit="return validateFormTwo()" method="post">
 <input type="text" name="answerTwo">
 <input type="submit" value="check">
 </form>
 
-
-### 3.3 Russian and Standard Arabic
+### Task 2.7: Russian and Standard Arabic
 What is the country where, according the database, Russian and Standard Arabic are spoken?
+```{r, include=FALSE}
+country.lang(c("Russian", "Standard Arabic"), intersection = TRUE)
+```
+
 <form name="FormThree" onsubmit="return validateFormThree()" method="post">
 <input type="text" name="answerThree">
 <input type="submit" value="check">
@@ -183,3 +202,77 @@ function validateFormThree() {
     }
 }
 </script>
+
+## 3. Map creation
+
+### 3.1 Base map
+The most important part of the `lingtypology` package is the function `map.feature`:
+```{r}
+map.feature(c("Adyghe", "Kabardian", "Polish", "Russian", "Bulgarian"))
+```
+
+### 3.2 Set features
+The goal of this package is to allow linguists to map language features. A list of languages and correspondent features can be stored in a `data.frame` as follows:
+
+```{r}
+df <- data.frame(language = c("Adyghe", "Kabardian", "Polish", "Russian", "Bulgarian"),
+                 features = c("polysynthetic", "polysynthetic", "fusional", "fusional", "fusional"))
+df
+```
+
+Now we can draw a map:
+```{r}
+map.feature(languages = df$language,
+            features = df$features)
+```
+
+There are several types of variables in R and `map.feature` works differently depending on the variable type. I will use a build in data set `ejective_and_n_consonants` that contains 19 languages from [UPSyD database](http://www.lapsyd.ddl.ish-lyon.cnrs.fr/lapsyd/). This dataset have three variables: the categorical variable `ejectives` indicates whether some language has any ejective sound, numeric variables `consonants` and `vowels` that contains information about the number of consonants and vowels (based on UPSyD database). We can create two maps with categorical variable and with numeric variable:
+
+```{r}
+map.feature(languages = ejective_and_n_consonants$language,
+            features = ejective_and_n_consonants$ejectives) # categorical
+map.feature(languages = ejective_and_n_consonants$language,
+            features = ejective_and_n_consonants$consonants) # numeric
+```
+
+There are two possible ways to show the World map: with the Atlantic sea or with the Pacific sea in the middle. If you don't need default Pacific view use the `map.orientation` parameter (thanks @languageSpaceLabs and @tzakharko for that idea):
+
+```{r}
+map.feature(languages = ejective_and_n_consonants$language,
+            features = ejective_and_n_consonants$consonants,
+            map.orientation = "Atlantic")
+```
+
+### 3.3 Set labels
+An alternative way to add some short text to a map is to use the `label` option.
+```{r}
+map.feature(languages = df$language,
+            features = df$features,
+            label = df$language)
+```
+
+There are some additional arguments for customization: `label.fsize` for setting font size, `label.position` for controlling the label position, and `label.hide` to control the appearance of the label: if `TRUE`, the labels are displayed on mouse over(as on the previous map), if `FALSE`, the labels are always displayed (as on the next map).
+
+```{r}
+map.feature(languages = df$language, 
+            features = df$features,
+            label = df$language,
+            label.fsize = 20,
+            label.position = "left",
+            label.hide = FALSE)
+```
+
+### Task 3.4
+Create a map with Chukchi, French, Khana and Nii and add labels that don't disappear:
+```{r, echo = FALSE}
+map.feature(languages = c("Chukchi", "French", "Khana", "Nii"),
+            label = c("Chukchi", "French", "Khana", "Nii"),
+            label.hide = FALSE)
+```
+
+### Task 3.5
+Create a map of Bodish languages and add minimap with argument `minimap = TRUE`:
+```{r, echo = FALSE}
+map.feature(languages = lang.aff("Bodish"),
+            minimap = TRUE)
+```

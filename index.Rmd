@@ -1,5 +1,5 @@
 ---
-title: "`lingtypology` in Paris (19.01.2018)"
+title: "Areal Patterns: Visualisation Tools and Analysis Methods"
 author: "[G. Moroz](mailto:agricolamz@gmail.com)"
 output:
   html_document:
@@ -7,11 +7,13 @@ output:
 ---
 
 ```{r, message=FALSE, echo=FALSE}
-sessionInfo()$R.version$version.string
-paste("lingtypology version:", packageVersion("lingtypology"))
+knitr::opts_chunk$set(message = FALSE, comment=NA)
+cat(sessionInfo()$R.version$version.string)
+cat(paste("lingtypology version: 1.0.13"))
 ```
 
 Prerequisites:
 
-* install [R](https://cran.r-project.org/)
-* install [RStudio Desktop](http://www.rstudio.com/download) (it is not necessary, but RStudio makes a lot of things easier)
+* installed [R](https://cran.r-project.org/)
+* installed [RStudio Desktop](http://www.rstudio.com/download) (it is not necessary, but RStudio makes a lot of things easier)
+* if you don't want to install anything, try [RStudio Cloud](https://rstudio.cloud/), it is slow at first time, but then you'll have the full RStudio on-line.
