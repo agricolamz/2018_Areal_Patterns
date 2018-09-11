@@ -34,7 +34,7 @@ setwd("/...") # use backslashes `\`, not slashes `/`!
 So now we can save the dataframe:
 
 ```{r, eval = FALSE}
-write.csv(ejective_and_n_consonants, "my_file_name.csv")
+write.csv(ejective_and_n_consonants, "my_file_name.csv", row.names = FALSE)
 ```
 
 ### 1.2 Loading data to R
@@ -89,7 +89,7 @@ map.feature(languages = df$language,
 ```
 
 How to say _moon_ in Sign Languages? Here is an example:
-```{r, echo=FALSE}
+```{r}
 # Create a dataframe with links to video
 sign_df <- data.frame(languages = c("American Sign Language", "Russian Sign Language", "French Sign Language"),
                       popup = c("https://media.spreadthesign.com/video/mp4/13/48600.mp4", "https://media.spreadthesign.com/video/mp4/12/17639.mp4", "https://media.spreadthesign.com/video/mp4/10/17638.mp4"))
